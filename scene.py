@@ -6,15 +6,6 @@ import os
 clear = lambda:os.system('clear')
 
 
-def question_getter():
-    random.seed(time.time())
-    questions = [
-        ["1+2+3+4+5", "15"],
-        ["2+3+4+5", "14"]
-    ]
-    return questions[random.randint(0,len(questions)-1)]
-
-
 def opening_scene():
     print("Welcome to DesByte")
     print("Semester Project (CYSE-130)")
@@ -82,6 +73,9 @@ def help():
     print("M | Map: Map tab")
     print("I | Info: Information tab")
     print("Q | Quest: Quests tab")
-    print("clear | cls: clear terminal")
+    print("S | Save: Save your game")
+    print("U | Upload: Upload saves")
+    print("R | Override | RESTORE: Override all save data")
+    print("C | clear | cls: clear terminal")
     print("-1: Exit game\n\n")
 

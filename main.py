@@ -23,15 +23,21 @@ def console(player):
         x += 1
 
         if user_input == "-1":
-            print("Quiting the game *not saving*")
+            user_input = input("Would you like to save (y/n)\n---> ")
+            if user_input == "y":
+                player.save(1)
+            else:
+                print("Quiting the game *not saving*")
             exit()
 
         elif user_input == "help" or user_input == "h":
             clear()
+            x = 0
             scene.help()
 
-        elif user_input == "clear" or user_input == "cls":
+        elif user_input == "clear" or user_input == "cls" or user_input == "c":
             clear()
+            x = 0
 
         elif user_input == "m" or user_input == "map":
             player.map()
@@ -42,42 +48,47 @@ def console(player):
         elif user_input == "q" or user_input == "quest":
             player.quest()
 
+
+        elif user_input == "s" or user_input == "save":
+            player.save(1)
+        
+        elif user_input == "u" or user_input == "upload":
+            player.save(2)
+
+        elif user_input == "r" or user_input == "override" or user_input == "restore":
+            player.save(3)
+
         else:
             clear()
-            print('Please use the \"Help\" Command for valid inputs')
-
-
-def format_help(info):
-    print(f"Name: {info[0]}")
-    print(f"\"{info[1]}\"\n")
-    question = info[2][0]
-    answer = info[2][1]
-
-    print(question)
-
-    user_answer = input("\n---> ")
-    
-    if user_answer == answer:
-        print("CORRECT!")
-        return True
-    else:
-        print(f"Wrong, the answer was {answer}")
-        return False
+            x = 0
+            print('Please use the \"Help\" Command for valid commands')
 
 
 
 def main(): #WORK ON THE QUESTIONS
     scene.opening_scene()
+    up = input("Would you like to upload your save (Y/N)\n---> ").lower()
+    if up == "y":
+        player = user(up=up)
+    else:
+        user_name = str(input("What's your name:\n---> "))
+
+        player = user(name=user_name)
+
+
+    scene.name = player.name
     
-    user_name = str(input("What's your name:\n---> "))
-    player = user(name=user_name)
-    scene.name = user_name
-    
-    if input() != "":
+    if input("<SKIP INTRO>") != "":
         scene.intro_scene()
     
+    else: #FOR TESTING AND DEBUGGING
+        #reward = npc.format_question()
+        #player.quest_complete()
+        #input()
+        pass
 
     console(player)
+
 
 
 
