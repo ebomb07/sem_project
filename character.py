@@ -83,6 +83,9 @@ class user:
 
     def __init__(self,name = "NULL", health=100, support=0, moral=75, money=100, quest_num = 0, inventory=[], up = "n"):
         self.active_quests = []
+        self.call = False
+        self.city_name = "Day_city"
+        self.ending = None
         self.completed_quests = []
         self.available_quests = [ #Format: <NAME> <Description> <required support> <reward support> <next index>
 
@@ -517,7 +520,7 @@ class user:
             clear()
             print(f"Your HP: {self.health}")
             
-            print(f"{name}: You wont be able to solve this") #ADD PLAYER HEALTH AND CHANGE IF THE ANSWER IS WRONG. KEEP GOING UNTIL 0 HP OR COMPLETE QUESTION
+            print(f"{name}: You wont be able to solve this")
             print(f"{question}")
 
             user_answer = input(">>> ").lower()
