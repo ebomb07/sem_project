@@ -58,10 +58,25 @@ def console(player):
         elif user_input == "r" or user_input == "override" or user_input == "restore":
             player.save(3)
 
+        elif user_input == "sh" or user_input == "shop":
+            player.store()
+        
         else:
             clear()
             x = 0
             print('Please use the \"Help\" Command for valid commands')
+
+
+        try:
+            if user_input.split()[0] == "use":
+                clear()
+                item_id = int(user_input.split()[1])
+                player.use_item(item_id)
+        except:
+            clear()
+            x = 0
+            print('Please use the \"Help\" Command for valid commands')
+
 
 
 
@@ -82,8 +97,7 @@ def main(): #WORK ON THE QUESTIONS
         scene.intro_scene()
     
     else: #FOR TESTING AND DEBUGGING
-        #reward = npc.format_question()
-        #player.quest_complete()
+        #player.store()
         #input()
         pass
 

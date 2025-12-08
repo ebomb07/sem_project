@@ -77,5 +77,7 @@ def help():
     print("U | Upload: Upload saves")
     print("R | Override | RESTORE: Override all save data")
     print("C | clear | cls: clear terminal")
+    print("sh | shop: opens the shop")
+    print("use: use an item")
     print("-1: Exit game\n\n")
 

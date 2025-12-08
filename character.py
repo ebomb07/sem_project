@@ -36,17 +36,29 @@ class npc:
     def question_getter(types=0, pos=0): #Question Format [<question>, <answer>, <reward>]
         random.seed(time.time())
         questions = [
-            ["10", "e", 1],
-            ["2+3+4+5", "14", 1]
+            ["hvs_rcu_xiadsr_hvs_tsbqs", "the_dog_jumped_the_fence", 1],
+            [".. ..--.- .-.. . ..-. - ..--.- - .... . ..--.- ... - --- ...- . ..--.- --- -.", "i_left_the_stove_on", 1],
+            ["India Sierra _ Tango Hotel India Sierra _ Tango Hotel India November Golf _ Oscar November", "is_this_thing_on", 1],
+            ["77 65 6C 6C 5F 79 6F 75 5F 66 6F 75 6E 64 5F 6D 65", "well_you_found_me"],
+            ["eW91X2RlY29kZWRfdGhpcz8=","you_decoded_this?",1],
+            ["105 95 100 111 95 108 105 107 101 95 110 117 109 98 101 114 115", "i_do_like_numbers", 1],
+            ["aaaab aaaaa aaaba abbab abbaa abaaa baaab ababb babba aabab aaaaa baabb abbab baaaa abaaa baaba aabaa", "bacon_is_my_favorite", 1]
         ]
 
-        desbyte_question = []
+        desbyte_question = [
+            ["What is the md5 hash for: (desbyte)", "26daafa43fc380ea0b30f0cbb6d51815"],
+            ["When was the RSA encryption published", "1977"],
+            ["What hash is this\n0CB6948805F797BF2A82807973B89537","ntlm"],
+            ["What is the SHA1 hash for: (day_city)", "6a879991b1e365842924007ba5d2f9e96b6f631b"]
+        ]
 
         
         if types == 0:
             return questions[random.randint(0,len(questions)-1)]
         else:
             return desbyte_question[pos]
+
+
 
     def format_question():
         clear()
@@ -111,6 +123,16 @@ class user:
                     "Shutdown desbytes network and report the the police",
                     50,
                     30,
+                    5],
+                    ["good_ending",
+                    "Everyone in Day city is happy that you saved them",
+                    130,
+                    0,
+                    -1],
+                    ["bad_ending",
+                    "City dosn't view you as a savior and turns more into darkness",
+                    99,
+                    0,
                     -1]
 
             ]
@@ -227,14 +249,11 @@ class user:
             else:
                 self.health = 100
                 print("you have reached the maximum of 100 health")
+            return 1
 
         elif type_of_healing == 2: # Support healing 
-            if self.support + heal <= 100:
-                self.support += heal
+            self.support += heal
 
-            else:
-                self.support = 100
-                print("You have reached the maximum of 100 Support")
 
         elif type_of_healing == 3: # Moral healing 
             if self.moral + heal <= 100:
@@ -242,7 +261,8 @@ class user:
             else:
                 self.moral = 100
                 print("You have reached the maximum of 100 moral")
-        
+            return 1
+
         elif type_of_healing == 4: # Money healing
             self.money += money
 
@@ -250,7 +270,80 @@ class user:
         self.inv.append(item)
 
     def inventory_remove(self,item):
-        self.inv.remove(item)
+        self.inv.pop(item)
+
+
+    def store(self):
+        clear()
+        print("Z: Welcome to my shop\nZ: What would you like to buy")
+        active = True
+        shop_items = [ #<name>, <price>, <ID>
+            ["support boost (+5)", 50, 0],
+            ["Healing potion (+5)", 25, 1],
+            ["Healing potion (+15)", 80, 2],
+            ["Moral boost (+10)",100, 3]
+        ]
+
+        time.sleep(1.5)
+        clear()
+        while active:
+            clear()
+            print(f"{'Shop items':-^20}")
+            print(f"Your money: ${self.money}")
+            for i in range(len(shop_items)):
+                print(f"\n[{i+1}] {shop_items[i][0]} - ${shop_items[i][1]}")
+            
+            print("\n(-1) Return")
+            
+            try:
+                user_choice = int(input("\n---> "))
+
+                if user_choice <= 0:
+                    return 0
+                
+                if self.money - shop_items[user_choice-1][1] >= 0:
+
+                    self.damage(4, shop_items[user_choice - 1][1])
+                    self.inventory_add(shop_items[user_choice - 1])
+
+                else:
+                    clear()
+                    print("Not enough money")
+                    time.sleep(1.5)
+                    clear()
+
+            except ValueError:
+                print("please input a valid number")
+                time.sleep(1.5)
+                clear()
+
+    def use_item(self,item_id):
+            if item_id > len(self.inv) or item_id < 0:
+                return -1
+            else:
+                match self.inv[item_id][-1]: # ADD A REMOVE FEATURE
+                    case 0:
+                        self.healing(2, 5)
+                        self.inventory_remove(item_id)
+                    case 1:
+
+                        check = self.healing(1,5)
+                        if check != 1:
+                            self.inventory_remove(item_id)
+
+                    case 2: 
+
+                        check = self.healing(1,15)
+                        if check != 1:
+                            self.inventory_remove(item_id)
+
+                    case 3:
+                        check = self.healing(3,10)
+                        if check != 1:
+                            self.inventory_remove(item_id)
+                
+
+
 
     def map(self):
         clear()
@@ -273,12 +366,18 @@ class user:
                     self.healing(2,reward)
 
     def information(self):
-        print(f"\n\nName: {self.name}")
+        clear()
+        print(f"{'Inventory':-^19}")
+        print(f"\nName: {self.name}")
         print(f"Health: {self.health}")
         print(f"Support : {self.support}")
         print(f"Moral: {self.moral}")
         print(f"Money: {self.money}")
-        print(f"Inventory: {self.inv}\n\n")
+        print(f"Inventory:[")
+        for i in range(len(self.inv)):
+            print(f"\t[{i}] {self.inv[i][0]}")
+        print("]\n\n")
+
 
     def quest(self):
         active = True
