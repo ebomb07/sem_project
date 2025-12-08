@@ -18,11 +18,7 @@ class npc:
             "Mary",
             "James",
             "Sam",
-            "Jane",
-            "Cameron",
-            "David",
-            "Ethan",
-            "Somil"
+            "Jane"
         ]
 
         dialogue = [
@@ -30,10 +26,10 @@ class npc:
             "HELP! HELP! HELP!"
         ]
 
-
         return (names[random.randint(0,len(names)-1)], dialogue[random.randint(0,len(dialogue)-1)], npc.question_getter())
 
-    def question_getter(types=0, pos=0): #Question Format [<question>, <answer>, <reward>]
+
+    def question_getter(): #Question Format [<question>, <answer>, <reward>]
         random.seed(time.time())
         questions = [
             ["hvs_rcu_xiadsr_hvs_tsbqs", "the_dog_jumped_the_fence", 5],
@@ -44,24 +40,13 @@ class npc:
             ["105 95 100 111 95 108 105 107 101 95 110 117 109 98 101 114 115", "i_do_like_numbers", 5],
             ["aaaab aaaaa aaaba abbab abbaa abaaa baaab ababb babba aabab aaaaa baabb abbab baaaa abaaa baaba aabaa", "bacon_is_my_favorite", 5]
         ]
-
-        desbyte_question = [
-            ["What is the md5 hash for: (desbyte)", "26daafa43fc380ea0b30f0cbb6d51815"],
-            ["When was the RSA encryption published", "1977"],
-            ["What hash is this\n0CB6948805F797BF2A82807973B89537","ntlm"],
-            ["What is the SHA1 hash for: (day_city)", "6a879991b1e365842924007ba5d2f9e96b6f631b"]
-        ]
-
         
-        if types == 0:
-            return questions[random.randint(0,len(questions)-1)]
-        else:
-            return desbyte_question[pos]
+        return questions[random.randint(0,len(questions)-1)]
 
 
-
-    def format_question():
+    def format_question(self,types=0,pos=0):
         clear()
+
         info = npc.random_question()
 
         name = info[0]
@@ -76,14 +61,18 @@ class npc:
 
         user_answer = input("\n---> ").lower()
         
-        if user_answer == answer:
-            print("CORRECT!")
+        if user_answer == answer and reward != -1:
             return reward
 
-        else:
-            print(f"Wrong, the answer was {answer}")
-            time.sleep(1.5)
+        elif user_answer != answer and reward != -1:
             return reward * -1
+        
+        
+
+        if user_answer == answer and reward == -1:
+            return 1
+        elif user_answer != answer and reward == -1:
+            return -1
 
         
 
@@ -92,7 +81,7 @@ class npc:
     
 class user:
 
-    def __init__(self,name = "NULL", health=100, support=0, moral=75, money=100,quest_num = 0, inventory=[], up = "n"):
+    def __init__(self,name = "NULL", health=100, support=0, moral=75, money=100, quest_num = 0, inventory=[], up = "n"):
         self.active_quests = []
         self.completed_quests = []
         self.available_quests = [ #Format: <NAME> <Description> <required support> <reward support> <next index>
@@ -100,13 +89,13 @@ class user:
                     ["Tutorial", 
                     "The tutorial teaches you the basics of the game and controls",
                     0,
-                    10,
+                    5,
                     1],
 
                     ["First_mission",
                     "Help a Civilian with their task",
                     0,
-                    15,
+                    20,
                     2],
 
                     ["Combat_desbyte",
@@ -149,7 +138,7 @@ class user:
             self.quest_num = quest_num
             self.inv = inventory
             
-            if self.quest_num == 0: #ADD AN UPLOAD COMPLETED QUEST
+            if self.quest_num == 0: 
                 self.active_quests.append(self.available_quests[self.quest_num])
             else:
                 self.active_quests.append(self.available_quests[self.quest_num - 1])
@@ -204,12 +193,12 @@ class user:
             if input(f"Type CONFIRM_{self.name} to restore to default\n---> ") == f"CONFIRM_{self.name}":
                 print("OVERRIDING...")
                 with open("save.json","w") as fp:
-                    default = {
+                    default = { 
                         "name": "",
-                        "health": 0,
+                        "health": 100,
                         "support": 0,
-                        "moral": 0,
-                        "money": 0,
+                        "moral": 75,
+                        "money": 100,
                         "quest_num": 0,
                         "inv": []
                     }
@@ -229,6 +218,10 @@ class user:
         elif type_of_dmg == 1: # Health damage
         
             self.health -= dmg
+
+            if self.health <= 0:
+                print("You have lost exiting game now")
+                exit()
         
         elif type_of_dmg == 2: # Support damage
             
@@ -360,6 +353,11 @@ class user:
 
     def map(self):
         clear()
+
+        if types != 0:
+            npc.format_question(types,pos)
+            return 0
+
         items = ["City_hall"]
         active = True
         for i in range(len(items)):
@@ -378,12 +376,15 @@ class user:
                     self.damage(2,reward)
                     self.damage(1,5)
                     print(f"Wrong you lost {reward} support and 5 health")
+                    time.sleep(2)
+                    clear()
                 else:
                     mon = random.randint(10,25)
                     self.healing(2,reward)
                     self.healing(4, mon)
                     print(f"Correct! you gained {reward} support and {mon} dollars")
-
+                    time.sleep(2)
+                    clear()
 
     def information(self):
         clear()
@@ -456,14 +457,92 @@ class user:
                 print(f"Description: {self.active_quests[0][1]}")
                 print(f"Reward: {self.active_quests[0][3]} Support")
 
-                input("\n\n[Press <Enter> to continue]")
+                check = input("\n\nDo you want to start the quest? (Y/N)\n[Press <Enter> to continue]\n>>> ").lower()
+                
+                if check == "y":
+                    match self.active_quests[0][4] - 1: # Doesn't start at 0 because they complete it before having access
+                        case 1:
+                            scene.first_mission(self)
+                        case 2:
+                            scene.combat_desbyte(self)
+                        case 3:
+                            scene.retrieve_the_codes(self)
+                        case 4:
+                            scene.Final_mission(self)
+                        case 5:
+                            scene.good_ending(self)
+                        case 6:
+                            scene.bad_ending(self)
+
                 clear()
 
             else:
                 clear()
 
+
+    def desbyte_question_handler(self,pos,player):
+        
+        desbyte_names = [
+            "Cameron",
+            "David",
+            "Ethan",
+            "Somil",
+            "Jub"
+        ]
+
+        desbyte_question = [
+            ["What is the md5 hash for \"desbyte\"", "26daafa43fc380ea0b30f0cbb6d51815",-1],
+            ["What hash is this \"0CB6948805F797BF2A82807973B89537\"","ntlm",-1],
+            ["When was the RSA encryption published", "1977",-1],
+            ["What is the SHA1 hash for \"day_city\"", "6a879991b1e365842924007ba5d2f9e96b6f631b",-1]
+        ]
+
+        desbyte_dialogue = [
+            "NoOOOOoOoOOOOooo HOW DID YOU SOLVE IT!",
+            "THIS IS IMPOSSIBLE!",
+            "HOW CAN THIS BE!",
+            "what is real anymore..."
+
+        ]
+
+
+        name = desbyte_names[random.randint(0,len(desbyte_names) - 1)]
+        question = desbyte_question[pos][0]
+        answer = desbyte_question[pos][1]
+        active = True
+        if pos == 0:
+            pos += 1
+            
+        while active:
+            clear()
+            print(f"Your HP: {self.health}")
+            
+            print(f"{name}: You wont be able to solve this") #ADD PLAYER HEALTH AND CHANGE IF THE ANSWER IS WRONG. KEEP GOING UNTIL 0 HP OR COMPLETE QUESTION
+            print(f"{question}")
+
+            user_answer = input(">>> ").lower()
+
+            if user_answer == answer:
+                print(f"\n\n{name}: {desbyte_dialogue[random.randint(0,len(desbyte_dialogue) - 1)]}")
+                time.sleep(1.5)
+                clear()
+                active = False
+                return 0
+
+            
+            else:
+                print("\nWrong you lost 5 HP")
+                self.damage(1,5*pos)
+                time.sleep(1.5)
+                clear()
+
     def quest_complete(self):
+        self.healing(2,self.active_quests[0][3])
+        if self.quest_num == 0:
+            self.quest_num += 1
+
         self.active_quests.append(self.available_quests[self.quest_num])
         self.completed_quests.append(self.active_quests[0])
         self.active_quests.pop(0)
-        self.quest_num = self.active_quests
+        self.quest_num = self.active_quests[0][4]
+        

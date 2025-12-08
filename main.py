@@ -46,6 +46,7 @@ def console(player):
             player.information()
 
         elif user_input == "q" or user_input == "quest":
+            clear()
             player.quest()
 
 
@@ -81,7 +82,9 @@ def console(player):
 
 
 def main(): #WORK ON THE QUESTIONS
-    scene.opening_scene()
+    scene.opening()
+
+
     up = input("Would you like to upload your save (Y/N)\n---> ").lower()
     if up == "y":
         player = user(up=up)
@@ -94,10 +97,11 @@ def main(): #WORK ON THE QUESTIONS
     scene.name = player.name
     
     if input("<SKIP INTRO>") != "":
-        scene.intro_scene()
+        scene.intro()
     
     else: #FOR TESTING AND DEBUGGING
-        #player.store()
+        player.quest_complete()
+        #scene.first_mission(player)
         #input()
         pass
 

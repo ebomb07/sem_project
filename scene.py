@@ -1,12 +1,11 @@
 import random
 import time
 import os
-
+import character
 
 clear = lambda:os.system('clear')
 
-
-def opening_scene():
+def opening():
     print("Welcome to DesByte")
     print("Semester Project (CYSE-130)")
     print("Created by: Ethan C.")
@@ -14,7 +13,7 @@ def opening_scene():
     clear()
 
 
-def intro_scene():
+def intro():
     clear()
     print(f"Z: Hello {name}")
     time.sleep(0.5)
@@ -27,10 +26,10 @@ def intro_scene():
 
     print(f"Z: I will help with your setup. Please stand by...")
     input("\n\n[Press <Enter> to continue]")
-    tutorial_scene()
+    tutorial()
 
 
-def tutorial_scene():
+def tutorial():
     clear()
 
     print("Z: I'm going to teach you a few things about the network.")
@@ -66,6 +65,52 @@ def tutorial_scene():
     print("Z: GoodBye for now...")
 
     input("\n\n[Press <Enter> to continue]")
+    player.quest_complete()
+    #first_mission()
+
+
+def first_mission(player):
+    clear()
+    print("Z: Okay we are going to break through desbyte, and solve one of their questions.")
+    time.sleep(2.25)
+
+    player.desbyte_question_handler(0,player)
+
+    print("Z: GOOD JOB! you just solved one of desbytes questions.")
+    time.sleep(2.25)
+
+    print("Z: But there are more things we have to do to stop desbyte for good.")
+    time.sleep(2.25)
+
+    print("Z: Contact me when you are ready")
+    time.sleep(1)
+
+    input("\n\n[Press <Enter> to continue]")
+    player.quest_complete()
+    
+
+
+
+def combat_desbyte(player):
+    player.desbyte_question_handler(1,player)
+    player.quest_complete()
+    
+
+def retrieve_the_codes(player):
+    player.desbyte_question_handler(2,player)
+    player.quest_complete()
+    
+
+def Final_mission(player):
+    player.desbyte_question_handler(3,player)
+    player.quest_complete()
+    
+
+def good_ending(player):
+    pass
+
+def bad_ending(player):
+    pass
 
 def help():
     print("Tab Table:\n")
