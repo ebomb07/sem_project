@@ -36,13 +36,13 @@ class npc:
     def question_getter(types=0, pos=0): #Question Format [<question>, <answer>, <reward>]
         random.seed(time.time())
         questions = [
-            ["hvs_rcu_xiadsr_hvs_tsbqs", "the_dog_jumped_the_fence", 1],
-            [".. ..--.- .-.. . ..-. - ..--.- - .... . ..--.- ... - --- ...- . ..--.- --- -.", "i_left_the_stove_on", 1],
-            ["India Sierra _ Tango Hotel India Sierra _ Tango Hotel India November Golf _ Oscar November", "is_this_thing_on", 1],
-            ["77 65 6C 6C 5F 79 6F 75 5F 66 6F 75 6E 64 5F 6D 65", "well_you_found_me"],
-            ["eW91X2RlY29kZWRfdGhpcz8=","you_decoded_this?",1],
-            ["105 95 100 111 95 108 105 107 101 95 110 117 109 98 101 114 115", "i_do_like_numbers", 1],
-            ["aaaab aaaaa aaaba abbab abbaa abaaa baaab ababb babba aabab aaaaa baabb abbab baaaa abaaa baaba aabaa", "bacon_is_my_favorite", 1]
+            ["hvs_rcu_xiadsr_hvs_tsbqs", "the_dog_jumped_the_fence", 5],
+            [".. ..--.- .-.. . ..-. - ..--.- - .... . ..--.- ... - --- ...- . ..--.- --- -.", "i_left_the_stove_on", 5],
+            ["India Sierra _ Tango Hotel India Sierra _ Tango Hotel India November Golf _ Oscar November", "is_this_thing_on", 5],
+            ["77 65 6C 6C 5F 79 6F 75 5F 66 6F 75 6E 64 5F 6D 65", "well_you_found_me",5],
+            ["eW91X2RlY29kZWRfdGhpcz8=","you_decoded_this?",5],
+            ["105 95 100 111 95 108 105 107 101 95 110 117 109 98 101 114 115", "i_do_like_numbers", 5],
+            ["aaaab aaaaa aaaba abbab abbaa abaaa baaab ababb babba aabab aaaaa baabb abbab baaaa abaaa baaba aabaa", "bacon_is_my_favorite", 5]
         ]
 
         desbyte_question = [
@@ -74,7 +74,7 @@ class npc:
         print(f"Question: {question}\n")
         print(f"Reward: {reward} support")
 
-        user_answer = input("\n---> ")
+        user_answer = input("\n---> ").lower()
         
         if user_answer == answer:
             print("CORRECT!")
@@ -83,7 +83,9 @@ class npc:
         else:
             print(f"Wrong, the answer was {answer}")
             time.sleep(1.5)
-            return -1
+            return reward * -1
+
+        
 
     
 
@@ -244,11 +246,17 @@ class user:
         if type_of_healing == -1:
             return -1
         elif type_of_healing == 1: # Health healing 
+
             if self.health + heal <= 100:
                 self.health += heal
+
+            elif self.health == 100:
+                return -1
+
             else:
                 self.health = 100
-                print("you have reached the maximum of 100 health")
+                print(f"You have used your item to heal {100-heal} to reach 100 HP.")
+                
             return 1
 
         elif type_of_healing == 2: # Support healing 
@@ -258,13 +266,18 @@ class user:
         elif type_of_healing == 3: # Moral healing 
             if self.moral + heal <= 100:
                 self.moral += heal
+
+            elif self.moral == 100:
+                return -1
+
             else:
                 self.moral = 100
-                print("You have reached the maximum of 100 moral")
+                print(f"You have used your item to add {100-heal} moral to reach 100 moral.")
+
             return 1
 
         elif type_of_healing == 4: # Money healing
-            self.money += money
+            self.money += heal
 
     def inventory_add(self,item):
         self.inv.append(item)
@@ -328,18 +341,18 @@ class user:
                     case 1:
 
                         check = self.healing(1,5)
-                        if check != 1:
+                        if check == 1:
                             self.inventory_remove(item_id)
 
                     case 2: 
 
                         check = self.healing(1,15)
-                        if check != 1:
+                        if check == 1:
                             self.inventory_remove(item_id)
 
                     case 3:
                         check = self.healing(3,10)
-                        if check != 1:
+                        if check == 1:
                             self.inventory_remove(item_id)
                 
 
@@ -355,15 +368,22 @@ class user:
         user_input = ""
         while user_input != "-1":
             user_input = input("Map Console (\"i\" for more info ; -1 return)\n>>> ")
-            
+            clear()
             if user_input == "i":
                 print("City_hall: Location where you can help the citizens")
             elif user_input == "1":
                 reward = npc.format_question()
-                if reward == -1:
-                    return -1
+                if reward < 0:
+                    reward *= -1
+                    self.damage(2,reward)
+                    self.damage(1,5)
+                    print(f"Wrong you lost {reward} support and 5 health")
                 else:
+                    mon = random.randint(10,25)
                     self.healing(2,reward)
+                    self.healing(4, mon)
+                    print(f"Correct! you gained {reward} support and {mon} dollars")
+
 
     def information(self):
         clear()
