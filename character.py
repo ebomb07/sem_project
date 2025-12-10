@@ -102,7 +102,7 @@ class user:
                     2],
 
                     ["Combat_desbyte",
-                    "Complete the challegnes recieved by the hacker group desbyte",
+                    "Complete the challenges received by the hacker group desbyte",
                     35,
                     20,
                     3],
@@ -124,7 +124,7 @@ class user:
                     0,
                     -1],
                     ["bad_ending",
-                    "City dosn't view you as a savior and turns more into darkness",
+                    "City doesn't view you as a savior and turns more into darkness",
                     0,
                     0,
                     -2]
@@ -467,8 +467,10 @@ class user:
                 check = input("\n\nDo you want to start the quest? (Y/N)\n[Press <Enter> to continue]\n>>> ").lower()
                 
                 if check == "y" and self.support >= required_support:
+                   
                     match self.active_quests[0][4] - 1: # Doesn't start at 0 because they complete it before having access
                         case 1:
+                           
                             scene.first_mission(self)
                         case 2:
                             scene.combat_desbyte(self)

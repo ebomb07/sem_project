@@ -26,10 +26,10 @@ def intro(player):
 
     print(f"Z: I will help with your setup. Please stand by...")
     input("\n\n[Press <Enter> to continue]")
-    tutorial()
+    tutorial(player)
 
 
-def tutorial():
+def tutorial(player):
     clear()
 
     print("Z: I'm going to teach you a few things about the network.")
@@ -41,7 +41,7 @@ def tutorial():
     print("Z: This is where you are going to be typing commands.")
     time.sleep(2.25)
     
-    print("Z: You will have access to mutliple tabs.")
+    print("Z: You will have access to multiple tabs.")
     time.sleep(2.25)
 
     help()
@@ -266,7 +266,7 @@ def good_ending(player):
             time.sleep(2.5)
             print("Z: However I have to go know, and this might be the last time you see me.")
             time.sleep(2)
-            print(f"Z: It has been an honor and privilage {player.name}.")
+            print(f"Z: It has been an honor and privilege {player.name}.")
             time.sleep(2.75)
             print(f"Z: Goodbye...")
             
@@ -297,7 +297,7 @@ def good_ending(player):
             print("A year passes by...")
             print("You walk by the city hall and on the sign it says")
             print("Welcome to Night_city\nest. 2077")
-            player.city_name = "Night_city"
+            player.city_name = "Night_city" ## LMFAOOOOO
 
         
 
@@ -321,12 +321,12 @@ def bad_ending(player):
     print("Unknown: YOU COULD\'VE SAVED HIM.")
     time.sleep(1.5)
 
-    print("Unknown: AND NOW IT IS TO LATE")
+    print("Unknown: AND NOW IT IS TOO LATE")
     time.sleep(2)
 
     print("Call ended...")
     time.sleep(1)
-    print("You have recieved a text message")
+    print("You have received a text message")
     time.sleep(2.25)
     input("[Press <Enter> to continue]")
     clear()
@@ -348,7 +348,7 @@ def bad_ending(player):
 
 def end_credits(player):
     clear()
-    message1 = "Congradulations on completing the game.\nThis took many hours and over 1000 lines of code across 3 python files and 1 json file."
+    message1 = "Congratulations on completing the game.\nThis took many hours and over 1000 lines of code across 3 python files and 1 json file."
     message2 = "\nAside from that here are your stats from your game."
     message = message1 + message2
     message = message.split()
