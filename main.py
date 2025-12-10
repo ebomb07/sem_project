@@ -5,9 +5,16 @@ import time
 import platform
 
 '''
-    Checks your operating system so it can use the right command to clear the terminal properly
+    Project_name = Desbyte
+    Name: Ethan C.
+    Reason: Semester project for CYSE-130
+
+    Note: This game took a lot of time and  around 1200 lines of code across 3 python files and 1 json file
 '''
-if platform.system() != "Windows":
+
+
+# Checks your operating system so it can use the right command to clear the terminal properly
+if platform.system() != "Windows": 
     clear = lambda:os.system('clear') #Create a windows version of clearing & determinable with device type
     clear()
 
@@ -121,10 +128,6 @@ def main():
         scene.intro(player)
 
     console(player)
-
-
-
-
 
 
 if __name__ == "__main__":

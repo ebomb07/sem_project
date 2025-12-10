@@ -519,7 +519,9 @@ class user:
                 check = input("\n\nDo you want to start the quest? (Y/N)\n[Press <Enter> to continue]\n>>> ").lower()
                 
                 if check == "y" and self.support >= required_support: # This chooses which scene that the user is currently having active
-                    match self.active_quests[0][4] - 1: # Doesn't start at 0 because they complete it before having access
+                    match self.active_quests[0][4] - 1: 
+                        case 0:
+                            scene.tutorial(self)
                         case 1:
                             scene.first_mission(self)
                         case 2:

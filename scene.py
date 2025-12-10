@@ -266,7 +266,7 @@ def good_ending(player): # Good ending scene
     user_check = ""
     active = True
     while active: # makes sure you choose to either flip the lever or not
-        user_check = input("Do you flip the lever? (Y/N)\n>>> ")
+        user_check = input("Do you flip the lever? (Y/N)\n>>> ").lower()
         if user_check == "y": # you flip the lever
             clear()
             active = False
@@ -306,7 +306,7 @@ def good_ending(player): # Good ending scene
             time.sleep(0.5)
             print("Z: THIS CITY WILL ALWAYS BE NIGHT")
             input("\n\n[Press <Enter> to continue]")
-
+            clear()
             print("A year passes by...")
             print("You walk by the city hall and on the sign it says")
             print("Welcome to Night_city\nest. 2077")
@@ -322,7 +322,7 @@ def good_ending(player): # Good ending scene
 
 def bad_ending(player): # bad ending scene 
     clear()
-    print("You are getting a call...")
+    print("You're getting a call...")
     time.sleep(1.5)
 
     print("Unknown: YOU DIDN\'T PICK UP MY CALL.")
@@ -350,7 +350,7 @@ def bad_ending(player): # bad ending scene
 
     print("Unknown -> Z would want you to go to his funeral.")
     print("Unknown -> Address: 4400 University Dr, Fairfax, VA 22030")
-    print("Unknown -> Date & Time: 12/10/25 @ 2359")
+    print("Unknown -> Date & Time: 12/10/25 @ 23:59")
     print("Unknown has blocked you")
 
     input("\n\n[Press <Enter> to continue]")
@@ -409,7 +409,7 @@ def end_credits(player): # end credits scene
     elif player.call == True and player.city_name == "Night_city":
         next_message += "\n\nSince you didn't flip the lever you brought the city into darkness. This brought you to the good-bad ending"
         next_message += "\nNote: The name and year is a reference to the game and show cyberpunk."
-        len_end_message = len("\nNote: The name and year is a reference to the game and show cyberpunk.")
+        len_end_message = len("\nNote: The city name and year is a reference to the game and show cyberpunk.")
 
 
     for i,word in enumerate(next_message): # final messages
@@ -444,6 +444,6 @@ def help(): # Help tab (shows all the commands)
     print("R | Override | RESTORE: Override all save data")
     print("C | clear | cls: clear terminal")
     print("sh | shop: opens the shop")
-    print("use x: use an item (format: user <number corresponding to the inventory slot>)")
+    print("use x | use an item (format: user <number corresponding to the inventory slot>)")
     print("-1: Exit game\n\n")
 
