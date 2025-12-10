@@ -44,7 +44,7 @@ class npc:
         return questions[random.randint(0,len(questions)-1)]
 
 
-    def format_question(self,types=0,pos=0):
+    def format_question(types=0,pos=0):
         clear()
 
         info = npc.random_question()
@@ -59,7 +59,7 @@ class npc:
         print(f"Question: {question}\n")
         print(f"Reward: {reward} support")
 
-        user_answer = input("\n---> ").lower()
+        user_answer = input("\n>>> ").lower()
         
         if user_answer == answer and reward != -1:
             return reward
@@ -83,7 +83,7 @@ class user:
 
     def __init__(self,name = "NULL", health=100, support=0, moral=75, money=100, quest_num = 0, inventory=[], up = "n"):
         self.active_quests = []
-        self.call = False
+        self.call = None
         self.city_name = "Day_city"
         self.ending = None
         self.completed_quests = []
@@ -103,31 +103,31 @@ class user:
 
                     ["Combat_desbyte",
                     "Complete the challegnes recieved by the hacker group desbyte",
-                    10,
+                    35,
                     20,
                     3],
 
                     ["Retrieve_the_codes",
                     "Find and retrieve the code to enter desbytes network",
-                    20,
+                    65,
                     25,
                     4],
 
                     ["Final_mission",
                     "Shutdown desbytes network and report the the police",
-                    50,
+                    100,
                     30,
                     5],
                     ["good_ending",
                     "Everyone in Day city is happy that you saved them",
-                    130,
+                    0,
                     0,
                     -1],
                     ["bad_ending",
                     "City dosn't view you as a savior and turns more into darkness",
-                    99,
                     0,
-                    -1]
+                    0,
+                    -2]
 
             ]
 
@@ -152,6 +152,8 @@ class user:
             print("Y/N")
 
 
+
+
     def save(self, mode=None):
 
         if mode == None:
@@ -168,6 +170,7 @@ class user:
                 info["money"] = self.money
                 info["quest_num"] = self.quest_num
                 info["inv"] = self.inv
+                info["call"] = self.call
 
             with open("save.json", "w") as fp:
                 json.dump(info, fp)
@@ -182,10 +185,11 @@ class user:
                 self.support = info["support"]
                 self.moral = info["moral"]
                 self.money = info["money"]
-                self.quest_num = info["quest_num"]
+                self.quest_num = int(info["quest_num"])
                 self.inv = info["inv"]
+                self.call = info["call"]
                 self.active_quests.append(self.available_quests[self.quest_num])
-                self.quest_num = self.active_quests
+                self.quest_num = self.active_quests[0][-1]
 
                 for i in range(self.active_quests[0][-1] - 1):
                     self.completed_quests.append(self.available_quests[i])
@@ -193,7 +197,7 @@ class user:
 
         elif mode == 3:
             
-            if input(f"Type CONFIRM_{self.name} to restore to default\n---> ") == f"CONFIRM_{self.name}":
+            if input(f"Type CONFIRM_{self.name} to restore to default\n>>> ") == f"CONFIRM_{self.name}":
                 print("OVERRIDING...")
                 with open("save.json","w") as fp:
                     default = { 
@@ -203,7 +207,8 @@ class user:
                         "moral": 75,
                         "money": 100,
                         "quest_num": 0,
-                        "inv": []
+                        "inv": [],
+                        "call": False
                     }
 
                     json.dump(default,fp)
@@ -305,7 +310,7 @@ class user:
             print("\n(-1) Return")
             
             try:
-                user_choice = int(input("\n---> "))
+                user_choice = int(input("\n>>> "))
 
                 if user_choice <= 0:
                     return 0
@@ -356,10 +361,6 @@ class user:
 
     def map(self):
         clear()
-
-        if types != 0:
-            npc.format_question(types,pos)
-            return 0
 
         items = ["City_hall"]
         active = True
@@ -419,7 +420,7 @@ class user:
                 print(f"{i+1}C - {self.completed_quests[i][0]}")
 
 
-            user_input = input("\n\n-> ")
+            user_input = input("\n\n>>> ")
         
 
             try:
@@ -456,13 +457,16 @@ class user:
 
             elif user_input != -1 and extend == True and user_input == 1:
                 clear()
+                required_support = self.active_quests[0][2]
                 print(f"Name: {self.active_quests[0][0]}")
                 print(f"Description: {self.active_quests[0][1]}")
+                print(f"Required support: {required_support}")
+                print(f"Your support: {self.support}")
                 print(f"Reward: {self.active_quests[0][3]} Support")
 
                 check = input("\n\nDo you want to start the quest? (Y/N)\n[Press <Enter> to continue]\n>>> ").lower()
                 
-                if check == "y":
+                if check == "y" and self.support >= required_support:
                     match self.active_quests[0][4] - 1: # Doesn't start at 0 because they complete it before having access
                         case 1:
                             scene.first_mission(self)
@@ -472,25 +476,30 @@ class user:
                             scene.retrieve_the_codes(self)
                         case 4:
                             scene.Final_mission(self)
-                        case 5:
+                        case -2:
+                            print("good")
                             scene.good_ending(self)
-                        case 6:
+                        case -3:
                             scene.bad_ending(self)
-
+                else:
+                    clear()
+                    print("Please go to the city hall via the map to earn support")
+                    time.sleep(2)
+                    clear()
                 clear()
-
             else:
                 clear()
+                
 
 
     def desbyte_question_handler(self,pos,player):
         
         desbyte_names = [
-            "Cameron",
-            "David",
-            "Ethan",
-            "Somil",
-            "Jub"
+            "desbyte_Cameron",
+            "desbyte_David",
+            "desbyte_Ethan",
+            "desbyte_Somil",
+            "desbyte_Jub"
         ]
 
         desbyte_question = [
@@ -543,9 +552,16 @@ class user:
         self.healing(2,self.active_quests[0][3])
         if self.quest_num == 0:
             self.quest_num += 1
-
         self.active_quests.append(self.available_quests[self.quest_num])
         self.completed_quests.append(self.active_quests[0])
         self.active_quests.pop(0)
         self.quest_num = self.active_quests[0][4]
+
+        if self.quest_num < 0 and self.call == True:
+            self.active_quests.pop(0)
+            self.active_quests.append(self.available_quests[-2])
+        elif self.quest_num < 0 and self.call == False:
+            self.active_quests.pop(0)
+            self.active_quests.append(self.available_quests[-1])
+
         

@@ -6,7 +6,6 @@ import time
 clear = lambda:os.system('clear') #Create a windows version of clearing & determinable with device type
 clear()
 
-
 def console(player):
     clear()
     active = True
@@ -78,9 +77,6 @@ def console(player):
             x = 0
             print('Please use the \"Help\" Command for valid commands')
 
-
-
-
 def main(): #WORK ON THE QUESTIONS
     scene.opening()
 
@@ -94,13 +90,13 @@ def main(): #WORK ON THE QUESTIONS
         player = user(name=user_name)
 
 
-    scene.name = player.name
+    
     
     if input("<SKIP INTRO>") != "":
-        scene.intro()
+        scene.intro(player)
     
     else: #FOR TESTING AND DEBUGGING
-        player.quest_complete()
+        scene.end_credits(player)
         #scene.first_mission(player)
         #input()
         pass
