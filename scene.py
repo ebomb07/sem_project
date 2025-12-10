@@ -3,9 +3,18 @@ import time
 import os
 import character
 
-clear = lambda:os.system('clear')
+scene_clearing = "clear"
+clear = lambda:os.system(f"{scene_clearing}")
 
-def opening():
+
+'''
+    This file handles all the scenes for the main quest line of the game.
+    In basic terms it is majority print statments and time.sleep(x) for reading.
+    near the end there are different paths you can take for different endings and dialogue
+'''
+
+
+def opening(): # opening scene
     print("Welcome to DesByte")
     print("Semester Project (CYSE-130)")
     print("Created by: Ethan C.")
@@ -13,7 +22,7 @@ def opening():
     clear()
 
 
-def intro(player):
+def intro(player): #Intro Scene
     clear()
     print(f"Z: Hello {player.name}")
     time.sleep(0.5)
@@ -26,10 +35,10 @@ def intro(player):
 
     print(f"Z: I will help with your setup. Please stand by...")
     input("\n\n[Press <Enter> to continue]")
-    tutorial()
+    tutorial(player)
 
 
-def tutorial():
+def tutorial(player): # Tutorial scene
     clear()
 
     print("Z: I'm going to teach you a few things about the network.")
@@ -41,7 +50,7 @@ def tutorial():
     print("Z: This is where you are going to be typing commands.")
     time.sleep(2.25)
     
-    print("Z: You will have access to mutliple tabs.")
+    print("Z: You will have access to multiple tabs.")
     time.sleep(2.25)
 
     help()
@@ -53,23 +62,26 @@ def tutorial():
     print("Z: On top of that you get rewards after completing quests")
     time.sleep(2.25)
 
-    print("Z: But be careful with your timing and choice, because people will remember")
+    print("Z: However be careful because if you get questions wrong you start to lose health.")
+    time.sleep(2.25)
+
+    print("Z: But be careful with your choices, because people will remember")
     time.sleep(2.25)
 
     print("Z: Please explore the map and use your skills for good")
     time.sleep(2.25)
 
-    print("Z: I will reach out to you with future quest")
+    print("Z: Reach out to me when you are ready")
     time.sleep(2.25)
 
-    print("Z: GoodBye for now...")
+    print("Z: Goodbye for now...")
 
     input("\n\n[Press <Enter> to continue]")
     player.quest_complete()
     #first_mission()
 
 
-def first_mission(player):
+def first_mission(player): # First mission scene
     clear()
     print("Z: Okay we are going to break through desbyte, and solve one of their questions.")
     time.sleep(2.25)
@@ -89,9 +101,7 @@ def first_mission(player):
     player.quest_complete()
     
 
-
-
-def combat_desbyte(player):
+def combat_desbyte(player): # Combat desbyte mission scene
     clear()
     print("Z: Okay all we have to do is...")
     time.sleep(1)
@@ -102,7 +112,8 @@ def combat_desbyte(player):
     print("Z: ...")
     time.sleep(0.5)
     print("Z: ...")
-    time.sleep(0.5)
+    time.sleep(1.5)
+    print("\n\n")
 
     print(f"{player.name}: Where did he go?")
     time.sleep(2.25)
@@ -129,7 +140,7 @@ def combat_desbyte(player):
     player.quest_complete()
     
 
-def retrieve_the_codes(player):
+def retrieve_the_codes(player): # retrieve the codes scene
     clear()
     print(f"{player.name}: Okay this is the time. I need to get these codes.")
     time.sleep(2)
@@ -160,11 +171,12 @@ def retrieve_the_codes(player):
 
     print("An unknown number is calling...")
     user_check = ""
-
-    while player.call == None:
+    active = True
+    while active: # Makes sure you choose to answer or not answer the phone
         user_check = input("do you answer (Y/N)\n>>> ").lower()
-        if user_check == "y":
+        if user_check == "y": # you answer the phone
             player.call = True
+            active = False
             print("Unknown: I am sorry to inform you but Z has been taken.")
             time.sleep(2)
             print("Unknown: You have to get him back.")
@@ -175,8 +187,9 @@ def retrieve_the_codes(player):
             time.sleep(1)
             print("Call ended")
 
-        elif user_check == "n":
+        elif user_check == "n": # you don't answer the phone
             player.call = False
+            active = False
             print(f"{player.name}: That was weird...")
             time.sleep(1)
 
@@ -186,10 +199,10 @@ def retrieve_the_codes(player):
     player.quest_complete()
     
 
-def Final_mission(player):
+def Final_mission(player): # Final mission scene
     clear()
 
-    if player.call == True:
+    if player.call == True: # if you did pick up the phone
         print(f"{player.name}: Okay I have to take down desbyte and save Z.")
         time.sleep(2.25)
         print(f"{player.name}: This is the only time I can do it.")
@@ -206,7 +219,7 @@ def Final_mission(player):
         time.sleep(2.25)
         print("Z: Take some rest you deserved it. When you are ready, reach out again and I have 1 more thing I want you to do.")
         player.ending = True
-    else:
+    else: # if you didn't pick up the phone
         print(f"{player.name}: Okay I have to take down desbyte")
         time.sleep(2.5)
         print(f"{player.name}: I'm still confused why Z isn't answering and who that call was from.")
@@ -237,7 +250,7 @@ def Final_mission(player):
     player.quest_complete()
     
 
-def good_ending(player):
+def good_ending(player): # Good ending scene
     clear()
     print("Z: I still can't thank you enough for saving me.")
     time.sleep(1.5)
@@ -252,9 +265,9 @@ def good_ending(player):
 
     user_check = ""
     active = True
-    while active:
+    while active: # makes sure you choose to either flip the lever or not
         user_check = input("Do you flip the lever? (Y/N)\n>>> ")
-        if user_check == "y":
+        if user_check == "y": # you flip the lever
             clear()
             active = False
             print("You flip the lever...")
@@ -266,12 +279,12 @@ def good_ending(player):
             time.sleep(2.5)
             print("Z: However I have to go know, and this might be the last time you see me.")
             time.sleep(2)
-            print(f"Z: It has been an honor and privilage {player.name}.")
+            print(f"Z: It has been an honor and privilege {player.name}.")
             time.sleep(2.75)
             print(f"Z: Goodbye...")
             
 
-        elif user_check == "n":
+        elif user_check == "n": # you don't flip the lever
             clear()
             active = False
             print("You don't flip the lever")
@@ -307,7 +320,7 @@ def good_ending(player):
 
 
 
-def bad_ending(player):
+def bad_ending(player): # bad ending scene 
     clear()
     print("You are getting a call...")
     time.sleep(1.5)
@@ -321,7 +334,7 @@ def bad_ending(player):
     print("Unknown: YOU COULD\'VE SAVED HIM.")
     time.sleep(1.5)
 
-    print("Unknown: AND NOW IT IS TO LATE")
+    print("Unknown: AND NOW IT IS TOO LATE")
     time.sleep(2)
 
     print("Call ended...")
@@ -346,22 +359,81 @@ def bad_ending(player):
     player.quest_complete()
     end_credits(player)
 
-def end_credits(player):
+def end_credits(player): # end credits scene
     clear()
-    message1 = "Congradulations on completing the game.\nThis took many hours and over 1000 lines of code across 3 python files and 1 json file."
-    message2 = "\nAside from that here are your stats from your game."
-    message = message1 + message2
+    message = "Congratulations on completing the game.\nThis game took many hours and over 1000 lines of code across 3 python files and 1 json file. Aside from that here are your stats from your game."
+    len_message = len(message)
     message = message.split()
+
+    next_message = player.__str__().split()
 
     
     for word in message:
         for char in word:
             print(char,end="", flush=True)
-            time.sleep(0.1)
+            time.sleep(328/3600) #328/3600 <average wpm of reading>/ 3600 (to get word/second)
         print(" ",end="")
+    print('\n')
+    print("-"*len_message)
+    print("\n\n\n")
+
+    for i,word in enumerate(next_message): #information tab printing
+        for char in word:
+            print(char, end="", flush=True)
+            time.sleep(328/3600)
+        if i % 2 == 1:
+            print("\n")
+        else:
+            print(" ", end = "")
+
+    print("-"*len(f"Inventory: {str(player.inv)}"))
+
+    time.sleep(1.25)
+    len_end_message = 0
+
+
+    # All below is last mentions of the program
+
+    if player.call == False:
+        next_message = "\nYou didn't pick up the phone to protect Z. This lead to you getting the bad_ending."
+    else:
+        next_message = "\nYou picked up the phone and saved Z, leading to you getting the good_ending."
+    
+    len_end_message = len(next_message)
+
+    time.sleep(1.25)
+    if player.call == True and player.city_name == "Day_city":
+        next_message += "\n\nSince you flipped the lever and saved the city you earned the really good ending."
+        len_end_message = len("\n\nSince you flipped the lever and saved the city you earned the really good ending.")
+
+    elif player.call == True and player.city_name == "Night_city":
+        next_message += "\n\nSince you didn't flip the lever you brought the city into darkness. This brought you to the good-bad ending"
+        next_message += "\nNote: The name and year is a reference to the game and show cyberpunk."
+        len_end_message = len("\nNote: The name and year is a reference to the game and show cyberpunk.")
+
+
+    for i,word in enumerate(next_message): # final messages
+        for char in word:
+            print(char, end="", flush=True)
+            time.sleep(328/3600)
+        
+        print("", end="")
+
+    print("\n")
+    print("-"*len_end_message)
+    
+    time.sleep(2.25)
+    print("\n\n\n\nThank you again for playing my game.")
+    input("\n[Press <Enter> to end the game]")
+
+    print("Saving...")
+    #player.save(1)
+    time.sleep(1)
+
+    exit()
     
 
-def help():
+def help(): # Help tab (shows all the commands)
     print("Tab Table:\n")
     print("Note: every 5 commands the console will clear")
     print("M | Map: Map tab")
@@ -372,6 +444,6 @@ def help():
     print("R | Override | RESTORE: Override all save data")
     print("C | clear | cls: clear terminal")
     print("sh | shop: opens the shop")
-    print("use: use an item")
+    print("use x: use an item (format: user <number corresponding to the inventory slot>)")
     print("-1: Exit game\n\n")
 

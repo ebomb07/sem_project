@@ -1,1 +1,1 @@
-{"name": "", "health": 100, "support": 1000, "moral": 75, "money": 100, "quest_num": -1, "inv": [], "call": true}
+{"name": "Aiden", "health": 100, "support": 1000, "moral": 75, "money": 100, "quest_num": 3, "inv": ["test"], "call": true, "city_name": "Night_city"}

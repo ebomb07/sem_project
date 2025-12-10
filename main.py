@@ -1,12 +1,29 @@
 import os
-from character import user, npc
+import character
 import scene
 import time
+import platform
 
-clear = lambda:os.system('clear') #Create a windows version of clearing & determinable with device type
-clear()
+'''
+    Checks your operating system so it can use the right command to clear the terminal properly
+'''
+if platform.system() != "Windows":
+    clear = lambda:os.system('clear') #Create a windows version of clearing & determinable with device type
+    clear()
+
+else:
+    clear = lambda:os.system('cls')
+    # This section writes to character and scene to give them the correct version of clearing
+    character.character_clearing = 'cls'
+    scene.scene_clearing = 'cls'
+    clear()
 
 def console(player):
+    ''' 
+
+        This function handles every command that you enter. This function communicates with the character file in the user class.
+    
+    '''
     clear()
     active = True
     x = 0
@@ -77,29 +94,31 @@ def console(player):
             x = 0
             print('Please use the \"Help\" Command for valid commands')
 
-def main(): #WORK ON THE QUESTIONS
-    scene.opening()
+def main():
+    clear()
+    '''
+        The beginning of the game
+    '''
 
 
     up = input("Would you like to upload your save (Y/N)\n---> ").lower()
     if up == "y":
-        player = user(up=up)
+        player = character.user(up=up)
     else:
         user_name = str(input("What's your name:\n---> "))
+        if user_name == "":
+            print("You can't have an empty name...")
+            print("Default user_name: Aiden")
+            time.sleep(2.25)
+            player = character.user(name="Aiden")
+        else:
+            player = character.user(name=user_name)
 
-        player = user(name=user_name)
-
-
+    clear()
+    scene.opening()
     
-    
-    if input("<SKIP INTRO>") != "":
+    if player.quest_num == 0:
         scene.intro(player)
-    
-    else: #FOR TESTING AND DEBUGGING
-        scene.end_credits(player)
-        #scene.first_mission(player)
-        #input()
-        pass
 
     console(player)
 
